@@ -38,6 +38,15 @@ async def list_todos(
     return JSONResponse(content=jsonable_encoder(todos))
 
 
+@app.post("/todos", response_class=HTMLResponse)
+async def create_todo(request: Request, text: Annotated[str, Form()]):
+    todo = Todo(text)
+    todos.append(todo)
+    return templates.TemplateResponse(
+        request=request, name="todos.html", context={"todos": todos}
+    )
+
+
 @app.put("/todos/{todo_id}", response_class=HTMLResponse)
 async def update_todo(request: Request, todo_id: str, text: Annotated[str, Form()]):
     for index, todo in enumerate(todos):
